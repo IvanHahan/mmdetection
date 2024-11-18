@@ -1,0 +1,27 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+code: .
+environment_variables:
+  PYTHONPATH: "."
+  HF_TOKEN: "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"
+  HF_HOME: "azureml://subscriptions/0feed943-d77c-41d7-b087-eba62f229479/resourcegroups/AIandML/workspaces/AIandML/datastores/datasets/paths/cache"
+  INPUT_DATA: "${{inputs.data_root}}"
+command: >-
+  pip install . &&
+  python tools/train.py projects/CO-DETR/configs/codino/co_dino_5scale_swin_l_16xb1_16e_o365tococo.py
+environment: azureml:mmdet@latest
+compute: A100
+resources:
+  docker_args: '--ipc=host'
+  instance_count: 1 
+experiment_name: mmdet_codetr_layout_screens
+inputs:
+  data_root: 
+    type: uri_folder
+    path: azureml://subscriptions/0feed943-d77c-41d7-b087-eba62f229479/resourcegroups/AIandML/workspaces/AIandML/datastores/datasets/paths/
+services:
+  my_vs_code:
+    type: vs_code
+    nodes: all # For distributed jobs, use the `nodes` property to pick which node you want to enable interactive services on. If `nodes` are not selected, by default, interactive applications are only enabled on the head node. Values are "all", or compute node index (for ex. "0", "1" etc.)
+  my_jupyter_lab:
+    type: jupyter_lab 
+    nodes: all
