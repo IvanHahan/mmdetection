@@ -123,3 +123,9 @@ work_dirs/
 *.sh~
 *.pt
 *.safetensors
+.git
+demo/
+.circleci
+.dev_scripts
+.github
+docker/
