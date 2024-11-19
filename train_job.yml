@@ -4,9 +4,8 @@ environment_variables:
   PYTHONPATH: "."
   HF_TOKEN: "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"
   HF_HOME: "azureml://subscriptions/0feed943-d77c-41d7-b087-eba62f229479/resourcegroups/AIandML/workspaces/AIandML/datastores/datasets/paths/cache"
-  INPUT_DATA: "${{inputs.data_root}}"
 command: >-
-  pip install . &&
+  pip install -v . && pip install platformdirs && INPUT_DATA=${{inputs.data_root}} &&
   python tools/train.py projects/CO-DETR/configs/codino/co_dino_5scale_swin_l_16xb1_16e_o365tococo.py
 environment: azureml:mmdet@latest
 compute: A100
