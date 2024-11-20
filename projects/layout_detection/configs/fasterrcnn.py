@@ -1,5 +1,5 @@
 _base_ = [
-    'mmdet::_base_/models/faster-rcnn_r50_fpn.py',
+    './faster-rcnn_r50_fpn.py',
     './dataset.py',
     './schedule.py', 
     './runtime.py'
