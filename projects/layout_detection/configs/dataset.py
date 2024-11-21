@@ -6,7 +6,7 @@ train_annots = 'screen_layout_coco/train.json'
 val_annots = 'screen_layout_coco/val.json'
 img_prefix = 'screen_layout_labelme/'
 image_size = (1600, 1600)
-data_root = os.environ.get('INPUT_DATA', "/home/azureuser/cloudfiles/code/datasets/")
+data_root = os.environ.get('INPUT_DATA', "/home/azureuser/cloudfiles/code/datasets") + '/'
 
 class_name = (
     "O",
