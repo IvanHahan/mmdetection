@@ -1,6 +1,6 @@
 # training schedule for 1x
 
-max_iters = 90000
+max_iters = 50000
 eval_period = 5000
 train_cfg = dict(type='IterBasedTrainLoop', max_iters=max_iters, val_interval=eval_period)
 val_cfg = dict(type='ValLoop')

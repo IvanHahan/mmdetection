@@ -6,7 +6,7 @@ default_hooks = dict(
     param_scheduler=dict(type='ParamSchedulerHook'),
     checkpoint=dict(type='CheckpointHook', interval=5000, by_epoch=False, max_keep_ckpts=2),
     sampler_seed=dict(type='DistSamplerSeedHook'),
-    visualization=dict(type='DetVisualizationHook', draw=True, show=False, interval=500),)
+    visualization=dict(type='DetVisualizationHook', draw=True, show=False, interval=50),)
 
 env_cfg = dict(
     cudnn_benchmark=False,

@@ -1,4 +1,4 @@
-_base_ = "base/grounding_dino_swin-t_finetune_16xb2_1x_coco.py"
+_base_ = "base/grounding_dino_swin-t.py"
 
 load_from = "https://download.openmmlab.com/mmdetection/v3.0/grounding_dino/groundingdino_swint_ogc_mmdet-822d7e9d.pth"
 

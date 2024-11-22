@@ -10,7 +10,7 @@ image_size = (1600, 1600)
 data_root = os.environ.get('INPUT_DATA', "/home/azureuser/cloudfiles/code/datasets") + '/'
 
 class_name = (
-    "O",
+    "layout",
 )
 num_classes = len(class_name)
 metainfo = dict(
