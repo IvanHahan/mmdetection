@@ -1,8 +1,8 @@
 _base_ = [
-    './faster-rcnn_r50_fpn.py',
-    './dataset.py',
-    './schedule.py', 
-    './runtime.py'
+    'base/faster-rcnn_r50_fpn.py',
+    'base/dataset.py',
+    'base/schedule.py', 
+    'base/runtime.py'
 ]
 
 # MMEngine support the following two ways, users can choose
