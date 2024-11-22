@@ -1,4 +1,5 @@
 import os
+
 # dataset settings
 dataset_type = 'CocoDataset'
 
@@ -25,13 +26,15 @@ train_pipeline = [
     dict(type='LoadImageFromFile', backend_args=backend_args),
     dict(type='LoadAnnotations', with_bbox=True),
     dict(type='RandomFlip', prob=0.5),
+    dict(type='Color', prob=0.6),
+    dict(type='Invert', prob=0.5),
     dict(
         type='RandomChoice',
         transforms=[
             [
                 dict(
                     type='RandomChoiceResize',
-                    scales=[(1600, 1600)],
+                    scales=[image_size],
                     keep_ratio=True)
             ],
             [
@@ -39,8 +42,8 @@ train_pipeline = [
                     type='RandomChoiceResize',
                     # The radio of all image in train dataset < 7
                     # follow the original implement
-                    scales=[(1024, 1024), (2048, 2048), (512, 512)],
-                    keep_ratio=True),
+                    scales=[(1024, 768), (2048, 1024), (2536, 1024)],
+                    keep_ratio=False),
                 dict(
                     type='RandomCrop',
                     crop_type='absolute_range',
@@ -48,7 +51,19 @@ train_pipeline = [
                     allow_negative_crop=True),
                 dict(
                     type='RandomChoiceResize',
-                    scales=[(1600, 1600)],
+                    scales=[image_size],
+                    keep_ratio=True)
+            ],
+            [
+                dict(
+                    type='RandomChoiceResize',
+                    # The radio of all image in train dataset < 7
+                    # follow the original implement
+                    scales=[(1024, 768), (2048, 1024), (2536, 1024)],
+                    keep_ratio=False),
+                dict(
+                    type='RandomChoiceResize',
+                    scales=[image_size],
                     keep_ratio=True)
             ]
         ]),
@@ -60,7 +75,7 @@ train_pipeline = [
 ]
 test_pipeline = [
     dict(type='LoadImageFromFile', backend_args=backend_args),
-    dict(type='FixScaleResize', scale=(1600, 1600), keep_ratio=True),
+    dict(type='FixScaleResize', scale=image_size, keep_ratio=True),
     dict(type='LoadAnnotations', with_bbox=True),
     dict(
         type='PackDetInputs',
@@ -68,8 +83,8 @@ test_pipeline = [
                    'scale_factor', 'text', 'custom_entities'))
 ]
 train_dataloader = dict(
-    batch_size=1,
-    num_workers=1,
+    batch_size=2,
+    num_workers=2,
     persistent_workers=True,
     sampler=dict(type='DefaultSampler', shuffle=True),
     batch_sampler=dict(type='AspectRatioBatchSampler'),
@@ -80,6 +95,7 @@ train_dataloader = dict(
         ann_file=train_annots,
         data_prefix=dict(img=img_prefix),
         filter_cfg=dict(filter_empty_gt=True, min_size=32),
+        return_classes=True,
         pipeline=train_pipeline,
         backend_args=backend_args))
 val_dataloader = dict(
@@ -93,6 +109,7 @@ val_dataloader = dict(
         data_root=data_root,
         metainfo=metainfo,
         ann_file=val_annots,
+        return_classes=True,
         data_prefix=dict(img=img_prefix),
         test_mode=True,
         pipeline=test_pipeline,

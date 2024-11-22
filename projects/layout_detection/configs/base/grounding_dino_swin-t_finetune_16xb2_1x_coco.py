@@ -1,7 +1,7 @@
 _base_ = [
-    'base/dataset.py',
-    'base/schedule.py', 
-    'base/runtime.py'
+    './dataset.py',
+    './schedule.py', 
+    './runtime.py'
 ]
 load_from = 'https://download.openmmlab.com/mmdetection/v3.0/grounding_dino/groundingdino_swint_ogc_mmdet-822d7e9d.pth'  # noqa
 lang_model_name = 'bert-base-uncased'
