@@ -1,13 +1,13 @@
 _base_ = [
-    'base/faster-rcnn_r50_fpn.py',
-    'base/dataset.py',
-    'base/schedule.py', 
-    'base/runtime.py'
+    "base/faster-rcnn_r50_fpn.py",
+    "base/dataset.py",
+    "base/schedule.py",
+    "base/runtime.py",
 ]
 
 # MMEngine support the following two ways, users can choose
 # according to convenience
 # optim_wrapper = dict(type='AmpOptimWrapper')
-_base_.optim_wrapper.type = 'AmpOptimWrapper'
+_base_.optim_wrapper.type = "AmpOptimWrapper"
 
-load_from = 'https://download.openmmlab.com/mmdetection/v2.0/fp16/faster_rcnn_r50_fpn_fp16_1x_coco/faster_rcnn_r50_fpn_fp16_1x_coco_20200204-d4dc1471.pth'
+load_from = "models/fasterrcnn/iter_5000.pth"

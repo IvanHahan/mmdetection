@@ -1,7 +1,7 @@
 # training schedule for 1x
 
-max_iters = 50000
-eval_period = 5000
+max_iters = 10000
+eval_period = 2000
 train_cfg = dict(type='IterBasedTrainLoop', max_iters=max_iters, val_interval=eval_period)
 val_cfg = dict(type='ValLoop')
 test_cfg = dict(type='TestLoop')
@@ -14,7 +14,8 @@ param_scheduler = [
         type='CosineAnnealingLR',
         begin=0,
         end=max_iters,
-        by_epoch=False,)
+        by_epoch=False,
+        eta_min=0,)
 ]
 
 # optimizer

@@ -1,5 +1,5 @@
 _base_ = ["./dataset.py", "./schedule.py", "./runtime.py"]
-load_from = "https://download.openmmlab.com/mmdetection/v3.0/grounding_dino/groundingdino_swint_ogc_mmdet-822d7e9d.pth"  # noqa
+pretrained = "https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth"  # noqa
 lang_model_name = "bert-base-uncased"
 
 model = dict(
@@ -17,6 +17,7 @@ model = dict(
     language_model=dict(
         type="BertModel",
         name=lang_model_name,
+        max_tokens=256,
         pad_to_max=False,
         use_sub_sentence_represent=True,
         special_tokens_list=["[CLS]", "[SEP]", ".", "?"],
@@ -37,7 +38,9 @@ model = dict(
         patch_norm=True,
         out_indices=(1, 2, 3),
         with_cp=True,
-        convert_weights=False,
+        convert_weights=True,
+        frozen_stages=-1,
+        init_cfg=dict(type="Pretrained", checkpoint=pretrained),
     ),
     neck=dict(
         type="ChannelMapper",
@@ -84,14 +87,13 @@ model = dict(
     positional_encoding=dict(num_feats=128, normalize=True, offset=0.0, temperature=20),
     bbox_head=dict(
         type="GroundingDINOHead",
-        num_classes=20,
+        num_classes=256,
         sync_cls_avg_factor=True,
-        contrastive_cfg=dict(max_text_len=256, log_scale=0.0, bias=False),
+        contrastive_cfg=dict(max_text_len=256, log_scale="auto", bias=True),
         loss_cls=dict(
             type="FocalLoss", use_sigmoid=True, gamma=2.0, alpha=0.25, loss_weight=1.0
         ),  # 2.0 in DeformDETR
         loss_bbox=dict(type="L1Loss", loss_weight=5.0),
-        loss_iou=dict(type="GIoULoss", loss_weight=2.0),
     ),
     dn_cfg=dict(  # TODO: Move to model.train_cfg ?
         label_noise_scale=0.5,
@@ -109,26 +111,31 @@ model = dict(
             ],
         )
     ),
-    test_cfg=dict(max_per_img=900),
+    test_cfg=dict(max_per_img=300),
 )
 
-# dataset settings
 
 optim_wrapper = dict(
     _delete_=True,
     type="OptimWrapper",
-    optimizer=dict(type="AdamW", lr=0.0001, weight_decay=0.0001),
+    optimizer=dict(type="AdamW", lr=0.0004, weight_decay=0.0001),  # bs=16 0.0001
     clip_grad=dict(max_norm=0.1, norm_type=2),
     paramwise_cfg=dict(
         custom_keys={
             "absolute_pos_embed": dict(decay_mult=0.0),
             "backbone": dict(lr_mult=0.1),
+            "language_model": dict(lr_mult=0.1),
         }
     ),
 )
+
 # learning policy
 
 # NOTE: `auto_scale_lr` is for automatically scaling LR,
 # USER SHOULD NOT CHANGE ITS VALUES.
 # base_batch_size = (16 GPUs) x (2 samples per GPU)
-auto_scale_lr = dict(base_batch_size=32)
+auto_scale_lr = dict(base_batch_size=64)
+
+default_hooks = dict(
+    visualization=dict(type="GroundingVisualizationHook", draw=True, interval=2)
+)

@@ -1,6 +1,6 @@
 _base_ = "base/grounding_dino_swin-t.py"
 
-load_from = "https://download.openmmlab.com/mmdetection/v3.0/grounding_dino/groundingdino_swint_ogc_mmdet-822d7e9d.pth"
+load_from = "models/dino/iter_25000.pth"
 
 
 optim_wrapper = dict(
